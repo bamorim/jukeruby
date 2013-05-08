@@ -1,7 +1,10 @@
 class CircularDistributedQueue
+  attr_reader :current_user, :current_music
   def initialize
     @user_queue = []
     @user_musics = {}
+    @current_user = nil
+    @current_music = nil
   end
 
   def add(holder, item)
@@ -14,15 +17,20 @@ class CircularDistributedQueue
   end
 
   def next
-    if !@user_queue.empty?
-      next_user = @user_queue.shift
-      next_music = @user_musics[next_user].shift
-      if @user_musics[next_user].empty?
-        @user_musics.delete next_user
+    if @current_user
+      if @user_musics[@current_user] && @user_musics[@current_user].empty?
+        @user_musics.delete @current_user
       else
-        @user_queue << next_user
+        @user_queue << @current_user
       end
-      next_music
+    end
+
+    if !@user_queue.empty?
+      @current_user = @user_queue.shift
+      @current_music = @user_musics[@current_user].shift
+    else
+      @current_user = nil
+      @current_music = nil
     end
   end
 end
