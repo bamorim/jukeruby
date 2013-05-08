@@ -1,13 +1,15 @@
-require 'socket'
-require './player'
 MAXLEN = 1000
 SOCKET_FILE = 'queue.sock'
+require 'socket'
+require './queue_server'
+require './player'
 
 class JukeRuby
   attr_reader :player
   def initialize
     @queue_pid = fork do
-      exec "ruby", "queue_server.rb", SOCKET_FILE
+      server = QueueServer.new SOCKET_FILE
+      server.start
     end
 
     @player_thread = Thread.new do
