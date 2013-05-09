@@ -19,7 +19,8 @@ end
 
 def is_audio file
   mime = IO.popen(["file","--mime", "-b", file], in: :close, err: :close).read.chomp
-  mime.split(";")[0].split("/")[0] == "audio"
+  mime = mime.split(";")[0]
+  mime.split("/")[0] == "audio" || mime == "application/octet-stream"
 end
 
 def get_dir dir
