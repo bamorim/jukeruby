@@ -24,6 +24,8 @@ class QueueServer
           else
             s.send("EMPTY", 0)
           end
+        elsif message[0] == "user_list"
+          s.send("OK\n#{@queue.holder_list(message[1]).join("\n")}", 0)
         end
       end
     end

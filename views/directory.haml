@@ -1,0 +1,14 @@
+%div{data:{role:"page", "add-back-btn" => "true"}}
+  %div{data:{role:"header"}}
+    %h1= "Viewing /#{@path}"
+
+  %div{data:{role:"content"}}
+    %ul{data:{role:"listview"}}
+      %li{data:{role:"list-divider"}} Arquivos
+      - @files.each do |file|
+        %li
+          %a{href:"/music/#{file[:path]}", data:{rel:"dialog"}}= file[:name]
+      %li{data:{role:"list-divider"}} Pastas
+      - @directories.each do |file|
+        %li
+          %a{href:"/musics/#{file[:path]}", data:{transition:"slide"}}= file[:name]

@@ -16,6 +16,10 @@ class CircularDistributedQueue
     end
   end
 
+  def holder_list(holder)
+    @user_musics[holder] || []
+  end
+
   def next
     if @current_user
       if @user_musics[@current_user] && @user_musics[@current_user].empty?

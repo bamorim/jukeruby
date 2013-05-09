@@ -1,0 +1,10 @@
+%div{data:{role:"page", "add-back-btn" => "true"}}
+  %div{data:{role:"header"}}
+    %h1= "#{@filename}"
+
+  %div{data:{role:"content"}}
+    %p
+      Deseja adicionar
+      = @filename
+      a sua lista?
+    %a{href:"/add/#{@path}", data:{role:"button"}} Adicionar

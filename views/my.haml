@@ -1,0 +1,8 @@
+%div{data:{role:"page", "add-back-btn" => "true"}}
+  %div{data:{role:"header"}}
+    %h1 Meus Pedidos
+
+  %div{data:{role:"content"}}
+    %ul{data:{role:"listview"}}
+      - @musics.each do |music|
+        %li= music
