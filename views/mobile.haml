@@ -1,6 +1,8 @@
 %div{data:{role:"page"}}
   %div{data:{role:"header"}}
-    %h1 JukeBox
+    %h1
+      JukeBox 
+      = " - #{@current_music.split("/")[-1]}" if @current_music
 
   %div{data:{role:"content"}}
     %ul{data:{role:"listview"}}

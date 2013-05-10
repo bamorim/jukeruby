@@ -1,5 +1,5 @@
 MAXLEN = 1000
-SOCKET_FILE = 'queue.sock'
+SOCKET_FILE = 5678
 require 'socket'
 require './queue_server'
 require './player'

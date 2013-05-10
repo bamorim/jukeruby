@@ -8,7 +8,7 @@ module JukeRuby
 
     def play_next
       begin
-        socket = UNIXSocket.open(@socket_path)
+        socket = TCPSocket.open("localhost", @socket_path)
         socket.send("next", 0)
         message = socket.recv(MAXLEN).split("\n")
         if message[0] == "OK"

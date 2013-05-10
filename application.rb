@@ -43,6 +43,7 @@ before do
 end
 
 get '/' do
+  @current_music = jukebox.current_music
   haml :mobile
 end
 
