@@ -2,6 +2,7 @@ require 'sinatra'
 require './jukeruby'
 require 'json'
 require 'haml'
+require 'cgi'
 
 ROOT_FOLDER = "/home/bamorim/Music/"
 
@@ -12,9 +13,15 @@ def escape_brackets(s)
   s.gsub(/[\\\{\}\[\]\*\?]/) { |x| "\\"+x }
 end
 
+def escape_url(url)
+  url.split("/").map do |k| 
+    URI.escape(k.split(" ").map{ CGI.escape(k) }.join(" "))
+  end.join("/")
+end
+
 def file_list_hash fl
   x = fl.collect{|x| x.sub(ROOT_FOLDER, "")}
-  x.collect{|x| {name: x.split("/")[-1], path: x.gsub("[", "%5B").gsub("]","%5D")}}
+  x.collect{|x| {name: x.split("/")[-1], path: CGI.escape(x)}}
 end
 
 def is_audio file
@@ -58,8 +65,8 @@ get '/' do
   haml :mobile
 end
 
-get '/musics/*' do
-  @path = params[:splat].join("/")
+get '/musics/:path?' do
+  @path = (CGI.unescape params[:path] if params[:path]) || ""
   @directories, @files = get_dir @path
   haml :directory
 end
@@ -69,19 +76,20 @@ get '/search/?' do
   haml :directory
 end
 
-get '/music/*' do
-  @path = params[:splat].join("/")
-  @filename = @path.split("/")[-1]
-  @path = @path.gsub("[", "%5B").gsub("]","%5D")
+get '/music/:path?' do
+  unescaped_path = (CGI.unescape params[:path] if params[:path]) || ""
+  @path = CGI.escape unescaped_path
+  @filename = unescaped_path.split("/")[-1]
   haml :music
 end
 
-get '/add/*' do
-  path = "#{ROOT_FOLDER}#{params[:splat].join("/")}"
+get '/add/:path' do
+  relative_path = CGI.unescape params[:path]
+  path = "#{ROOT_FOLDER}#{relative_path}"
   if is_audio(path) && jukebox.add(session["user_key"], path)
     {status: "ok"}.to_json
   else
-    {status: "error"}.to_json
+    {status: "error", path: path}.to_json
   end
 end
 
