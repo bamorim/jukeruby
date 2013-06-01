@@ -39,6 +39,14 @@ class QueueServer
     end
   end
 
+  def delete s, message
+    if @queue.delete message[1], message[2], message[3]
+      s.send("OK", 0)
+    else
+      s.send("NOT_MODIFIED", 0)
+    end
+  end
+
   def current_music s, message
     if @queue.current_music
       s.send("OK\n#{@queue.current_music}", 0)

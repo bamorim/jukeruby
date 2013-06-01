@@ -26,8 +26,19 @@ end
 def get_dir dir
   path = "#{ROOT_FOLDER}#{escape_brackets(dir)}"
   sub_paths = Dir["#{path}/*"]
-  directories = file_list_hash sub_paths.select{|o| File.directory?(o)}
-  files = file_list_hash sub_paths.select{|o| (not File.directory?(o)) && is_audio(o)}
+  get_file_list sub_paths
+end
+
+def search expression
+  paths = `find #{ROOT_FOLDER} -iname "*#{expression}*"`.split("\n")
+  get_file_list paths
+end
+
+def get_file_list paths
+  directories = file_list_hash paths.select{|o| File.directory?(o)}
+  files = file_list_hash paths.select{|o| (not File.directory?(o)) && is_audio(o)}
+  directories.sort_by! { |k| k[:name] }
+  files.sort_by! { |k| k[:name] }
   [directories, files]
 end
 
@@ -53,6 +64,11 @@ get '/musics/*' do
   haml :directory
 end
 
+get '/search/?' do
+  @directories, @files = search params[:q]
+  haml :directory
+end
+
 get '/music/*' do
   @path = params[:splat].join("/")
   @filename = @path.split("/")[-1]
@@ -63,13 +79,21 @@ end
 get '/add/*' do
   path = "#{ROOT_FOLDER}#{params[:splat].join("/")}"
   if is_audio(path) && jukebox.add(session["user_key"], path)
-    redirect "/"
+    {status: "ok"}.to_json
   else
-    redirect back
+    {status: "error"}.to_json
   end
 end
 
 get "/my/?" do
   @musics = jukebox.user_list(session["user_key"]).collect{|x| x.split("/").last}
   haml :my
+end
+
+get "/now_playing.json" do
+  if current_music = jukebox.current_music
+    {status: "PLAYING", current_music: current_music.split("/")[-1]}.to_json
+  else
+    {status: "PAUSED"}.to_json
+  end
 end

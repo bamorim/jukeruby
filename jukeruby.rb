@@ -41,7 +41,7 @@ module JukeRuby
 
     def current_music
       response = queue_send "current_music"
-      response[1] if response[0] == "OK"
+      response[1].force_encoding('UTF-8') if response[0] == "OK"
     end
 
   private

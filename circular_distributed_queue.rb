@@ -16,6 +16,19 @@ class CircularDistributedQueue
     end
   end
 
+  def delete(holder, index, item)
+    if @user_musics[holder]
+      if !item || @user_musics[holder][index] == item
+        @user_musics[holder].delete_at index
+        true
+      else
+        false
+      end
+    else
+      false
+    end
+  end
+
   def holder_list(holder)
     @user_musics[holder] || []
   end

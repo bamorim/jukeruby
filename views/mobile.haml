@@ -1,11 +1,16 @@
 %div{data:{role:"page"}}
   %div{data:{role:"header"}}
-    %h1
-      JukeBox 
-      = " - #{@current_music.split("/")[-1]}" if @current_music
+    %h1 JukeBox
 
   %div{data:{role:"content"}}
     %ul{data:{role:"listview"}}
+      %li.now-playing
+        %h5 Tocando agora:
+        %h3= @current_music.split("/")[-1] if @current_music
+      %li
+        %form{action: "/search", method: "get"}
+          %input{name: "q"}
+          %input{type: "submit", value: "Buscar"}
       %li
         %a{href:"/my/", data:{transition:"slide"}} Ver Seus Pedidos
       %li
