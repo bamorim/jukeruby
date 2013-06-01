@@ -25,8 +25,11 @@ def file_list_hash fl
 end
 
 def is_audio file
-  mime = IO.popen(["file","--mime", "-b", file], in: :close, err: :close).read.chomp
-  mime = mime.split(";")[0]
+  # mime = IO.popen(["file","--mime", "-b", file], in: :close, err: :close).read.chomp
+  # mime = mime.split(";")[0]
+  # mime.split("/")[0] == "audio" || mime == "application/octet-stream"
+  mime = IO.popen(["mimetype", file], in: :close, err: :close).read.chomp
+  mime = mime.split(": ")[-1]
   mime.split("/")[0] == "audio" || mime == "application/octet-stream"
 end
 
