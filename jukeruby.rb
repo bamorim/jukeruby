@@ -2,28 +2,8 @@ MAXLEN = 1000
 SOCKET_FILE = 5678
 require 'socket'
 require './queue_server'
-require './player'
 
 module JukeRuby
-  class JukeboxServer
-    attr_reader :player
-    def initialize
-      @queue_pid = fork do
-        server = QueueServer.new SOCKET_FILE
-        server.start
-      end
-
-      player = Player.new SOCKET_FILE
-      loop { player.play_next }
-
-      ObjectSpace.define_finalizer(self, proc {
-        Process.kill 9, @queue_pid
-        Process.kill 9, @player_thread[:pid]
-        File.delete(SOCKET_FILE)
-      })
-    end
-  end
-
   class JukeboxClient
     def add user, music
       response = queue_send "add", user, music
