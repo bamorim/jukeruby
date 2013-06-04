@@ -23,6 +23,10 @@ class JukeRuby::Application < Sinatra::Base
     haml :mobile
   end
 
+  get "/user_key" do
+    session["user_key"]
+  end
+
   get '/musics/:path?' do
     @path = (CGI.unescape params[:path] if params[:path]) || ""
     @directories, @files = get_dir @path

@@ -1,35 +1,28 @@
 MAXLEN = 1000
 SOCKET_FILE = 5678
 require 'socket'
-require './queue_server'
+require 'redis'
 
 module JukeRuby
   class JukeboxClient
+    def initialize
+      @redis = Redis.new
+    end
+
     def add user, music
-      response = queue_send "add", user, music
-      response[0] == "OK"
+      if !@redis.lrange("users", 0, -1).include? user
+        @redis.lpush "users", user
+      end
+      msg = @redis.rpush("user_#{user}", music)
+      msg > 0
     end
 
     def user_list user
-      response = queue_send "user_list", user
-      if response[0] == "OK"
-        response[1..-1]
-      else
-        response[0]
-      end
+      @redis.lrange "user_#{user}", 0, -1
     end
 
     def current_music
-      response = queue_send "current_music"
-      response[1].force_encoding('UTF-8') if response[0] == "OK"
+      @redis.get "current_music"
     end
-
-  private
-    def queue_send *messages
-      queue_socket = TCPSocket.new("localhost", SOCKET_FILE)
-      queue_socket.send(messages.join("\n"), 0)
-      queue_socket.recv(MAXLEN).split("\n")
-    end
-
   end
 end

@@ -1,28 +1,26 @@
 require 'socket'
+require 'redis'
 
 module JukeRuby
   class Player
-    def initialize(socket)
-      @socket_path = socket
-    end
-
     def play_next
-      begin
-        socket = TCPSocket.open("localhost", @socket_path)
-        socket.send("next", 0)
-        message = socket.recv(MAXLEN).split("\n")
-        if message[0] == "OK"
-          play(message[1])
-        else
-          sleep(1)
+      redis = Redis.new
+      if redis.llen("users").to_i > 0
+        user = redis.lpop("users")
+        music = redis.lpop("user_#{user}")
+        redis.set "current_music", music
+        if redis.llen("user_#{user}").to_i > 0
+          redis.rpush "users", user
         end
-        socket.close
-      rescue
-        sleep(1) # Wait queue to finish
+        play(music)
+      else
+        redis.del "current_music"
+        sleep(1)
       end
     end
 
     def play file
+      $stdout.puts "[player] Looking for #{file}"
       @pid = fork { puts "LOL #{exec "mpg123", "-q", file}" }
       Thread.current[:pid] = @pid
       $stdout.puts "[player] PLAYING #{file}"
