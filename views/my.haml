@@ -3,6 +3,8 @@
     %h1 Meus Pedidos
 
   %div{data:{role:"content"}}
-    %ul{data:{role:"listview"}}
+    %ul{data:{role:"listview", split:{icon: "delete", theme: "d"}}}
       - @musics.each do |music|
-        %li= music
+        %li
+          %a= music[:name]
+          %a{href: "/remove/#{music[:path]}", data:{ajax: "false"}} Remover

@@ -24,5 +24,9 @@ module JukeRuby
     def current_music
       @redis.get "current_music"
     end
+
+    def remove user, music
+      musics = @redis.lrem "user_#{user}", 1, music
+    end
   end
 end

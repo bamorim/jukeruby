@@ -12,6 +12,8 @@ class JukeRuby::Application < Sinatra::Base
   jukebox = JukeRuby::JukeboxClient.new
   set :bind, '0.0.0.0'
 
+  set :session_secret, ENV["SESSION_KEY"] || "no_key"
+
   enable :sessions
 
   before do
@@ -55,8 +57,17 @@ class JukeRuby::Application < Sinatra::Base
     end
   end
 
+  get '/remove/:path' do
+    relative_path = CGI.unescape params[:path]
+    path = "#{ROOT_FOLDER}#{relative_path}"
+    jukebox.remove session['user_key'], path
+    redirect "/"
+  end
+
   get "/my/?" do
-    @musics = jukebox.user_list(session["user_key"]).collect{|x| x.split("/").last}
+    @musics = jukebox.user_list(session["user_key"]).collect do |x| 
+      {name: x.split("/").last, path: CGI.escape(x.sub(ROOT_FOLDER, ""))}
+    end
     haml :my
   end
 
