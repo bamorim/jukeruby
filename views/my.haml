@@ -6,5 +6,5 @@
     %ul{data:{role:"listview", split:{icon: "delete", theme: "d"}}}
       - @musics.each do |music|
         %li
-          %a= music[:name]
-          %a{href: "/remove/#{music[:path]}", data:{ajax: "false"}} Remover
+          %a= music.name
+          %a{href: "/remove/#{music.path}", data:{ajax: "false"}} Remover

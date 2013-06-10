@@ -1,10 +1,10 @@
 %div{data:{role:"page", "add-back-btn" => "true"}}
   %div{data:{role:"header"}}
-    %h1= "#{@filename}"
+    %h1= "#{@music.name}"
 
   %div{data:{role:"content"}}
     %p
       Deseja adicionar
-      = @filename
+      = @music.name
       a sua lista?
-    %a.add-link{href:"#", data:{role:"button", path:@path}} Adicionar
+    %a.add-link{href:"#", data:{role:"button", path:@music.path}} Adicionar

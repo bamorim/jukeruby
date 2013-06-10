@@ -1,6 +1,8 @@
 require 'socket'
 require 'redis'
 
+ROOT_FOLDER = "/home/bamorim/Music/"
+
 module JukeRuby
   class Player
     def play_next
@@ -21,7 +23,7 @@ module JukeRuby
 
     def play file
       $stdout.puts "[player] Looking for #{file}"
-      @pid = fork { puts "LOL #{exec "mpg123", "-q", file}" }
+      @pid = fork { puts "LOL #{exec "mpg123", "-q", ROOT_FOLDER+file}" }
       Thread.current[:pid] = @pid
       $stdout.puts "[player] PLAYING #{file}"
       $stdout.puts "[player] PID #{@pid}"
