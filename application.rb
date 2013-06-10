@@ -3,12 +3,9 @@ require './jukeruby'
 require 'json'
 require 'haml'
 require 'cgi'
-require './models/music_folder'
-require './models/path'
-require './models/directory'
-require './models/music'
-require './models/search'
-require './models/playlist'
+
+Dir[File.expand_path("../lib/*.rb", __FILE__)].each{|f| require f}
+Dir[File.expand_path("../models/*.rb", __FILE__)].each{|f| require f}
 
 ROOT_FOLDER = "/home/bamorim/Music/"
 
@@ -20,5 +17,4 @@ class JukeRuby::Application < Sinatra::Base
   enable :sessions
 end
 
-require './routes/main.rb'
-require './routes/api.rb'
+Dir[File.expand_path("../routes/*.rb", __FILE__)].each{|f| require f}
