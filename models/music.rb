@@ -44,12 +44,3 @@ class Music < Path
     mime.split("/")[0] == "audio" || mime == "application/octet-stream"
   end
 end
-
-class Cover
-  attr_accessor :content
-  attr_accessor :mime
-  def initialize(content,mime)
-    @content = content
-    @mime = mime
-  end
-end
