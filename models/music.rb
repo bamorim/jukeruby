@@ -7,18 +7,7 @@ class Music < Path
   end
 
   def image
-    @cover || begin
-      if full_path.split(".").last == "mp3"
-        TagLib::MPEG::File.open(full_path) do |file|
-          begin
-            c = file.id3v2_tag.frame_list('APIC').inject{|m,n| m.picture.length > n.picture.length ? n : m }
-            @cover = Cover.new c.picture, c.mime_type
-          rescue
-          end
-        end
-      end
-      @cover
-    end
+    @cover ||= Cover.new full_path
   end
   # Performance Issue: Tag discovery takes too much time
   # TODO: LIBRARY!!! (But that would be a big change would probably make changes in API, let it to version 2)
