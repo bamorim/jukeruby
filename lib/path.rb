@@ -13,6 +13,14 @@ class Path
     @path
   end
 
+  def to_json(*a)
+    to_h.to_json(*a)
+  end
+
+  def to_h
+    {name: name, path: path}
+  end
+
 private
   
   def bracket_escaped_path

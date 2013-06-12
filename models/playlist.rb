@@ -1,7 +1,9 @@
+require 'cgi'
+
 class Playlist
   def initialize id
     @id = id
-    @client = JukeRuby::JukeboxClient.new
+    @client = Jukebox.new
   end
 
   def add music

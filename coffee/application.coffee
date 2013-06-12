@@ -10,10 +10,7 @@ $ ->
   window.setInterval window.check_status, 10000
   $(document).on "click", ".add-link", (e) ->
     e.preventDefault()
-    $.post "/api/v1/playlist", {path: $(this).attr("data-path")}, (data) ->
-      if data.status == "ok"
-        history.back()
-      else
-        alert "Aconteceu um erro inesperado!"
+    $.post "/api/v1/playlist", {path: $(this).attr("data-path")}, ->
+      history.back()
     , "json"
     false

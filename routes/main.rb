@@ -9,7 +9,7 @@ class JukeRuby::Application < Sinatra::Base
   end
 
   get '/' do
-    @current_music = JukeRuby::JukeboxClient.new.current_music
+    @current_music = Jukebox.new.current_music
     haml :mobile
   end
 

@@ -3,7 +3,7 @@ require 'cgi'
 module MusicFolder
   def directories
     @dirs ||= sub_paths.select{|p| File.directory?(p)}.collect do |d| 
-      Directory.new CGI.escape(d.sub(ROOT_FOLDER, "").sub(/^(\/)+/,""))
+      Path.new CGI.escape(d.sub(ROOT_FOLDER, "").sub(/^(\/)+/,""))
     end
   end
 

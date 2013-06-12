@@ -18,12 +18,8 @@
       e.preventDefault();
       $.post("/api/v1/playlist", {
         path: $(this).attr("data-path")
-      }, function(data) {
-        if (data.status === "ok") {
-          return history.back();
-        } else {
-          return alert("Aconteceu um erro inesperado!");
-        }
+      }, function() {
+        return history.back();
       }, "json");
       return false;
     });

@@ -1,5 +1,6 @@
 require 'socket'
 require 'redis'
+require 'open3'
 
 ROOT_FOLDER = "/home/bamorim/Music/"
 
@@ -23,7 +24,7 @@ module JukeRuby
 
     def play file
       $stdout.puts "[player] Looking for #{file}"
-      @pid = fork { puts "LOL #{exec "mpg123", "-q", ROOT_FOLDER+file}" }
+      @pid = spawn("mplayer -quiet \"#{ROOT_FOLDER+file}\"", [:out, :err] => "/dev/null")
       Thread.current[:pid] = @pid
       $stdout.puts "[player] PLAYING #{file}"
       $stdout.puts "[player] PID #{@pid}"
